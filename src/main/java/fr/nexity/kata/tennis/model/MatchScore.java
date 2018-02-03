@@ -5,9 +5,9 @@ import fr.nexity.kata.tennis.model.set.SetScore;
 import fr.nexity.kata.tennis.model.tiebreak.TiebreakScore;
 import java.util.Objects;
 
-public class GlobalScore implements Score {
+public class MatchScore implements Score {
 
-  public final static GlobalScore INITIAL = new GlobalScore(SetScore.INITIAL, GameScore.INITIAL);
+  public final static MatchScore INITIAL = new MatchScore(SetScore.INITIAL, GameScore.INITIAL);
 
   private final SetScore setScore;
 
@@ -15,13 +15,13 @@ public class GlobalScore implements Score {
   private final TiebreakScore tiebreakScore;
   private final GameScore gameScore;
 
-  public GlobalScore(final SetScore setScore, final GameScore gameScore) {
+  public MatchScore(final SetScore setScore, final GameScore gameScore) {
     this.setScore = setScore;
     this.tiebreakScore = null;
     this.gameScore = gameScore;
   }
 
-  public GlobalScore(final SetScore setScore, final TiebreakScore tiebreakScore) {
+  public MatchScore(final SetScore setScore, final TiebreakScore tiebreakScore) {
     this.setScore = setScore;
     this.tiebreakScore = tiebreakScore;
     this.gameScore = null;
@@ -54,10 +54,10 @@ public class GlobalScore implements Score {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof GlobalScore)) {
+    if (!(o instanceof MatchScore)) {
       return false;
     }
-    GlobalScore that = (GlobalScore) o;
+    MatchScore that = (MatchScore) o;
     return Objects.equals(setScore, that.setScore) &&
         Objects.equals(tiebreakScore, that.tiebreakScore) &&
         Objects.equals(gameScore, that.gameScore);
@@ -71,7 +71,7 @@ public class GlobalScore implements Score {
 
   @Override
   public String toString() {
-    return "GlobalScore{" +
+    return "MatchScore{" +
         "setScore=" + setScore +
         ", tiebreakScore=" + tiebreakScore +
         ", gameScore=" + gameScore +

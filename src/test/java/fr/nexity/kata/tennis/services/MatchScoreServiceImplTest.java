@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import fr.nexity.kata.tennis.model.GlobalScore;
+import fr.nexity.kata.tennis.model.MatchScore;
 import fr.nexity.kata.tennis.model.Player;
 import fr.nexity.kata.tennis.model.game.GameScore;
 import fr.nexity.kata.tennis.model.game.PlayerGameScore;
@@ -18,16 +18,16 @@ import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
-public class GlobalScoreServiceImplTest {
+public class MatchScoreServiceImplTest {
 
 
   @Test
   public void shouldIncrementGameScoreIfPlayer1wins1pointAfter6to6games() {
     // GIVEN
     final Injector injector = Guice.createInjector(new TestModule());
-    final GlobalScoreService globalScoreService = injector.getInstance(GlobalScoreService.class);
+    final MatchScoreService matchScoreService = injector.getInstance(MatchScoreService.class);
     final GameScoreService gameScoreService = injector.getInstance(GameScoreService.class);
-    final GlobalScore globalScore = GlobalScore.INITIAL;
+    final MatchScore matchScore = MatchScore.INITIAL;
     final GameScore newExpectedGameScore = new GameScore(ImmutableMap
         .of(Player.PLAYER_1, PlayerGameScore.SCORE_15,
             Player.PLAYER_2, PlayerGameScore.SCORE_0));
@@ -35,24 +35,24 @@ public class GlobalScoreServiceImplTest {
         gameScoreService.increment(Matchers.eq(GameScore.INITIAL), Matchers.eq(Player.PLAYER_1)))
         .thenReturn(newExpectedGameScore);
     // WHEN
-    GlobalScore newGlobalScore = globalScoreService.increment(globalScore, Player.PLAYER_1);
+    MatchScore newMatchScore = matchScoreService.increment(matchScore, Player.PLAYER_1);
     // THEN
-    Assertions.assertThat(newGlobalScore.getTiebreakScore()).isNull();
-    Assertions.assertThat(newGlobalScore.getGameScore()).isEqualTo(newExpectedGameScore);
-    Assertions.assertThat(newGlobalScore.getSetScore()).isEqualTo(SetScore.INITIAL);
+    Assertions.assertThat(newMatchScore.getTiebreakScore()).isNull();
+    Assertions.assertThat(newMatchScore.getGameScore()).isEqualTo(newExpectedGameScore);
+    Assertions.assertThat(newMatchScore.getSetScore()).isEqualTo(SetScore.INITIAL);
   }
 
   @Test
   public void shouldIncrementSetScoreIfPlayer1winsTheGame() {
     // GIVEN
     final Injector injector = Guice.createInjector(new TestModule());
-    final GlobalScoreService globalScoreService = injector.getInstance(GlobalScoreService.class);
+    final MatchScoreService matchScoreService = injector.getInstance(MatchScoreService.class);
     final GameScoreService gameScoreService = injector.getInstance(GameScoreService.class);
     final SetScoreService setScoreService = injector.getInstance(SetScoreService.class);
     final GameScore actualGameScore = new GameScore(ImmutableMap
         .of(Player.PLAYER_1, PlayerGameScore.SCORE_40,
             Player.PLAYER_2, PlayerGameScore.SCORE_0));
-    final GlobalScore globalScore = new GlobalScore(SetScore.INITIAL, actualGameScore);
+    final MatchScore matchScore = new MatchScore(SetScore.INITIAL, actualGameScore);
     final GameScore newExpectedGameScore = new GameScore(ImmutableMap
         .of(Player.PLAYER_1, new PlayerGameScore(PlayerGameSituation.WIN),
             Player.PLAYER_2, PlayerGameScore.SCORE_0));
@@ -66,18 +66,18 @@ public class GlobalScoreServiceImplTest {
         setScoreService.increment(Matchers.eq(SetScore.INITIAL), Matchers.eq(Player.PLAYER_1)))
         .thenReturn(newExpectedSetScore);
     // WHEN
-    GlobalScore newGlobalScore = globalScoreService.increment(globalScore, Player.PLAYER_1);
+    MatchScore newMatchScore = matchScoreService.increment(matchScore, Player.PLAYER_1);
     // THEN
-    Assertions.assertThat(newGlobalScore.getTiebreakScore()).isNull();
-    Assertions.assertThat(newGlobalScore.getGameScore()).isEqualTo(GameScore.INITIAL);
-    Assertions.assertThat(newGlobalScore.getSetScore()).isEqualTo(newExpectedSetScore);
+    Assertions.assertThat(newMatchScore.getTiebreakScore()).isNull();
+    Assertions.assertThat(newMatchScore.getGameScore()).isEqualTo(GameScore.INITIAL);
+    Assertions.assertThat(newMatchScore.getSetScore()).isEqualTo(newExpectedSetScore);
   }
 
   @Test
   public void shouldIncrementSetScoreWithWinIfPlayer1winsTheTiebreak() {
     // GIVEN
     final Injector injector = Guice.createInjector(new TestModule());
-    final GlobalScoreService globalScoreService = injector.getInstance(GlobalScoreService.class);
+    final MatchScoreService matchScoreService = injector.getInstance(MatchScoreService.class);
     final TiebreakScoreService tiebreakScoreService = injector
         .getInstance(TiebreakScoreService.class);
     final SetScoreService setScoreService = injector.getInstance(SetScoreService.class);
@@ -87,7 +87,7 @@ public class GlobalScoreServiceImplTest {
     final TiebreakScore actualTiebreakScore = new TiebreakScore(ImmutableMap
         .of(Player.PLAYER_1, new PlayerTiebreakScore(6, false),
             Player.PLAYER_2, new PlayerTiebreakScore(0, false)));
-    final GlobalScore globalScore = new GlobalScore(actualSetScore, actualTiebreakScore);
+    final MatchScore matchScore = new MatchScore(actualSetScore, actualTiebreakScore);
     final TiebreakScore newExpectedTiebreakScore = new TiebreakScore(ImmutableMap
         .of(Player.PLAYER_1, new PlayerTiebreakScore(7, true),
             Player.PLAYER_2, new PlayerTiebreakScore(0, false)));
@@ -95,17 +95,18 @@ public class GlobalScoreServiceImplTest {
         .of(Player.PLAYER_1, new PlayerSetScore(7, true),
             Player.PLAYER_2, new PlayerSetScore(6, false)));
     Mockito.when(
-        tiebreakScoreService.increment(Matchers.eq(actualTiebreakScore), Matchers.eq(Player.PLAYER_1)))
+        tiebreakScoreService
+            .increment(Matchers.eq(actualTiebreakScore), Matchers.eq(Player.PLAYER_1)))
         .thenReturn(newExpectedTiebreakScore);
     Mockito.when(
         setScoreService.increment(Matchers.eq(actualSetScore), Matchers.eq(Player.PLAYER_1)))
         .thenReturn(newExpectedSetScore);
     // WHEN
-    GlobalScore newGlobalScore = globalScoreService.increment(globalScore, Player.PLAYER_1);
+    MatchScore newMatchScore = matchScoreService.increment(matchScore, Player.PLAYER_1);
     // THEN
-    Assertions.assertThat(newGlobalScore.getTiebreakScore()).isEqualTo(newExpectedTiebreakScore);
-    Assertions.assertThat(newGlobalScore.getGameScore()).isNull();
-    Assertions.assertThat(newGlobalScore.getSetScore()).isEqualTo(newExpectedSetScore);
+    Assertions.assertThat(newMatchScore.getTiebreakScore()).isEqualTo(newExpectedTiebreakScore);
+    Assertions.assertThat(newMatchScore.getGameScore()).isNull();
+    Assertions.assertThat(newMatchScore.getSetScore()).isEqualTo(newExpectedSetScore);
   }
 
 
@@ -116,7 +117,7 @@ public class GlobalScoreServiceImplTest {
       bind(GameScoreService.class).toInstance(Mockito.mock(GameScoreService.class));
       bind(TiebreakScoreService.class).toInstance(Mockito.mock(TiebreakScoreService.class));
       bind(SetScoreService.class).toInstance(Mockito.mock(SetScoreService.class));
-      bind(GlobalScoreService.class).to(GlobalScoreServiceImpl.class);
+      bind(MatchScoreService.class).to(MatchScoreServiceImpl.class);
     }
   }
 
