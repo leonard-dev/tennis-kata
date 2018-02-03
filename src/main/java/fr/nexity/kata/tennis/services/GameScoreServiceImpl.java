@@ -23,7 +23,7 @@ public class GameScoreServiceImpl implements GameScoreService {
     return GameScore.INITIAL;
   }
 
-  public GameScore incrementPoint(final GameScore score, final Player player) {
+  public GameScore increment(final GameScore score, final Player player) {
     if (score.hasWinner()) {
       throw new IllegalStateException(
           "Cannot increment a game with already a winner, please reset the game before!");

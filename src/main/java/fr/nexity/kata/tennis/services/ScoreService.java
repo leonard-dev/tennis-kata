@@ -7,6 +7,6 @@ public interface ScoreService<T extends HasWinner> {
 
   T createInitialScore();
 
-  T incrementPoint(T score, Player player);
+  T increment(T score, Player player);
 
 }

@@ -29,7 +29,7 @@ public class GameScoreServiceImpTest {
     // GIVEN
     GameScore gameScore = GameScore.INITIAL;
     // WHEN
-    GameScore newGameScore = gameScoreService.incrementPoint(gameScore, Player.PLAYER_1);
+    GameScore newGameScore = gameScoreService.increment(gameScore, Player.PLAYER_1);
     // THEN
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
         .isEqualTo(new PlayerGameScore(15));
@@ -42,8 +42,8 @@ public class GameScoreServiceImpTest {
     // GIVEN
     GameScore gameScore = GameScore.INITIAL;
     // WHEN
-    GameScore newGameScore = gameScoreService.incrementPoint(gameScore, Player.PLAYER_1);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_1);
+    GameScore newGameScore = gameScoreService.increment(gameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_1);
     // THEN
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
         .isEqualTo(new PlayerGameScore(30));
@@ -56,9 +56,9 @@ public class GameScoreServiceImpTest {
     // GIVEN
     GameScore gameScore = GameScore.INITIAL;
     // WHEN
-    GameScore newGameScore = gameScoreService.incrementPoint(gameScore, Player.PLAYER_1);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_1);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_1);
+    GameScore newGameScore = gameScoreService.increment(gameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_1);
     // THEN
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
         .isEqualTo(PlayerGameScore.SCORE_40);
@@ -71,10 +71,10 @@ public class GameScoreServiceImpTest {
     // GIVEN
     GameScore gameScore = GameScore.INITIAL;
     // WHEN
-    GameScore newGameScore = gameScoreService.incrementPoint(gameScore, Player.PLAYER_1);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_1);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_1);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_1);
+    GameScore newGameScore = gameScoreService.increment(gameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_1);
     // THEN
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
         .isEqualTo(new PlayerGameScore(PlayerGameSituation.WIN));
@@ -91,7 +91,7 @@ public class GameScoreServiceImpTest {
             Player.PLAYER_2, new PlayerGameScore(30)));
     // WHEN
     try {
-      gameScoreService.incrementPoint(gameScore, Player.PLAYER_1);
+      gameScoreService.increment(gameScore, Player.PLAYER_1);
       Assertions.fail("Should have failed");
     } catch (IllegalStateException e) {
       // THEN
@@ -104,11 +104,11 @@ public class GameScoreServiceImpTest {
     // GIVEN
     GameScore gameScore = GameScore.INITIAL;
     // WHEN
-    GameScore newGameScore = gameScoreService.incrementPoint(gameScore, Player.PLAYER_1);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_2);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_1);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_2);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_2);
+    GameScore newGameScore = gameScoreService.increment(gameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_2);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_2);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_2);
     // THEN
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
         .isEqualTo(new PlayerGameScore(30));
@@ -121,12 +121,12 @@ public class GameScoreServiceImpTest {
     // GIVEN
     GameScore gameScore = GameScore.INITIAL;
     // WHEN
-    GameScore newGameScore = gameScoreService.incrementPoint(gameScore, Player.PLAYER_1);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_1);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_2);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_1);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_2);
-    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_2);
+    GameScore newGameScore = gameScoreService.increment(gameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_2);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_2);
+    newGameScore = gameScoreService.increment(newGameScore, Player.PLAYER_2);
     // THEN
     Assertions.assertThat(newGameScore.isDeuce()).isTrue();
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
@@ -143,7 +143,7 @@ public class GameScoreServiceImpTest {
             Player.PLAYER_1, PlayerGameScore.SCORE_40,
             Player.PLAYER_2, PlayerGameScore.SCORE_40));
     // WHEN
-    GameScore newGameScore = gameScoreService.incrementPoint(deuceScore, Player.PLAYER_1);
+    GameScore newGameScore = gameScoreService.increment(deuceScore, Player.PLAYER_1);
     // THEN
     Assertions.assertThat(newGameScore.isDeuce()).isFalse();
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
@@ -160,7 +160,7 @@ public class GameScoreServiceImpTest {
             Player.PLAYER_1, new PlayerGameScore(PlayerGameSituation.ADVANTAGE),
             Player.PLAYER_2, PlayerGameScore.SCORE_40));
     // WHEN
-    GameScore newGameScore = gameScoreService.incrementPoint(gameScore, Player.PLAYER_2);
+    GameScore newGameScore = gameScoreService.increment(gameScore, Player.PLAYER_2);
     // THEN
     Assertions.assertThat(newGameScore.isDeuce()).isTrue();
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
@@ -177,7 +177,7 @@ public class GameScoreServiceImpTest {
             Player.PLAYER_1, new PlayerGameScore(PlayerGameSituation.ADVANTAGE),
             Player.PLAYER_2, PlayerGameScore.SCORE_40));
     // WHEN
-    GameScore newGameScore = gameScoreService.incrementPoint(gameScore, Player.PLAYER_1);
+    GameScore newGameScore = gameScoreService.increment(gameScore, Player.PLAYER_1);
     // THEN
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
         .isEqualTo(new PlayerGameScore(PlayerGameSituation.WIN));

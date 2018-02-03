@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import fr.nexity.kata.tennis.model.GlobalScore;
 import fr.nexity.kata.tennis.model.Player;
 import fr.nexity.kata.tennis.model.game.PlayerGameScore;
+import fr.nexity.kata.tennis.model.set.PlayerSetScore;
 import fr.nexity.kata.tennis.services.GlobalScoreService;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -13,6 +14,8 @@ import java.util.Scanner;
  * Hello world!
  */
 public class TennisKataMain {
+
+  private final static String SCORE_FORMAT = "| %1$10s | %2$10s | %3$10s |";
 
   public static void main(String[] args) {
     final Injector injector = Guice.createInjector(new TennisKataModule());
@@ -27,7 +30,7 @@ public class TennisKataMain {
         final String playerString = console.next();
         if (playerString.matches("[12]")) {
           player = Player.valueOf("PLAYER_" + playerString);
-          score = globalScoreService.incrementPoint(score, player);
+          score = globalScoreService.increment(score, player);
         } else if (playerString.matches("(exit|quit)")) {
           System.exit(0);
         }
@@ -38,16 +41,23 @@ public class TennisKataMain {
   }
 
   private final static void printScore(GlobalScore score) {
+    System.out.println(String.format(SCORE_FORMAT, "", "Points", "Games"));
     Arrays.stream(Player.values()).forEach(player ->
         System.out.println(
-            String.format("| %1s | %2$3s |", player.name(),
-                formatScore(score.getGameScore().getPlayerGameScore(player)))));
+            String.format(SCORE_FORMAT,
+                player.name(),
+                formatGameScore(score.getGameScore().getPlayerGameScore(player)),
+                formatSetScore(score.getSetScore().getPlayerSetScore(player)))));
 
   }
 
-  private final static String formatScore(PlayerGameScore playerGameScore) {
+  private final static String formatGameScore(PlayerGameScore playerGameScore) {
     return playerGameScore.hasSituation() ? playerGameScore.getSituation().name()
         : "" + playerGameScore.getPoints();
+  }
+
+  private final static String formatSetScore(PlayerSetScore playerSetScore) {
+    return playerSetScore.isWin() ? "WIN" : "" + playerSetScore.getGames();
   }
 
   private final static void printPrompt() {
