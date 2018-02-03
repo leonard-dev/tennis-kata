@@ -5,7 +5,10 @@ import java.util.Objects;
 
 public class PlayerGameScore {
 
-  public final static PlayerGameScore INITIAL = new PlayerGameScore(0);
+  public final static PlayerGameScore SCORE_0 = new PlayerGameScore(0);
+  public final static PlayerGameScore SCORE_15 = new PlayerGameScore(15);
+  public final static PlayerGameScore SCORE_30 = new PlayerGameScore(30);
+  public final static PlayerGameScore SCORE_40 = new PlayerGameScore(40);
 
   // either points or situation
   private final Integer points;

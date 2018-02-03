@@ -11,11 +11,11 @@ import java.util.Map;
 
 public class GameScoreServiceImpl implements GameScoreService {
 
-  private final static List<PlayerGameScore> PLAYER_GAME_SCORES_SEQUENCE = Arrays.asList(
-      new PlayerGameScore(0),
-      new PlayerGameScore(15),
-      new PlayerGameScore(30),
-      new PlayerGameScore(40),
+  private final static List<PlayerGameScore> PLAYER_GAME_SCORES_DEFAULT_SEQUENCE = Arrays.asList(
+      PlayerGameScore.SCORE_0,
+      PlayerGameScore.SCORE_15,
+      PlayerGameScore.SCORE_30,
+      PlayerGameScore.SCORE_40,
       new PlayerGameScore(PlayerGameSituation.WIN));
 
   @Override
@@ -29,17 +29,30 @@ public class GameScoreServiceImpl implements GameScoreService {
           "Cannot increment a game with already a winner, please reset the game before!");
     }
     final PlayerGameScore playerGameScore = score.getPlayerGameScore(player);
-    final int sequenceIndex = PLAYER_GAME_SCORES_SEQUENCE.indexOf(playerGameScore);
-    final PlayerGameScore newPlayerGameScore = PLAYER_GAME_SCORES_SEQUENCE.get(sequenceIndex + 1);
-    return createNewScore(score, player, newPlayerGameScore);
+    final PlayerGameScore opponentGameScore = score.getPlayerGameScore(player.getOpponent());
+    if (score.isDeuce()) {
+      return createNewScore(player, new PlayerGameScore(PlayerGameSituation.ADVANTAGE),
+          opponentGameScore);
+    } else if (playerGameScore.getSituation() == PlayerGameSituation.ADVANTAGE) {
+      return createNewScore(player, new PlayerGameScore(PlayerGameSituation.WIN),
+          opponentGameScore);
+    } else if (opponentGameScore.getSituation() == PlayerGameSituation.ADVANTAGE) {
+      // deuce re-entrance rule
+      return createNewScore(player, PlayerGameScore.SCORE_40, PlayerGameScore.SCORE_40);
+    } else {
+      // default rule
+      final int sequenceIndex = PLAYER_GAME_SCORES_DEFAULT_SEQUENCE.indexOf(playerGameScore);
+      final PlayerGameScore newPlayerGameScore = PLAYER_GAME_SCORES_DEFAULT_SEQUENCE
+          .get(sequenceIndex + 1);
+      return createNewScore(player, newPlayerGameScore, opponentGameScore);
+    }
   }
 
-  private GameScore createNewScore(GameScore oldScore, Player player,
-      PlayerGameScore newPlayerGameScore) {
+  private GameScore createNewScore(Player player, PlayerGameScore playerGameScore,
+      PlayerGameScore opponentGameScore) {
     final Map<Player, PlayerGameScore> newGameScoreByPlayer = new EnumMap<>(Player.class);
-    newGameScoreByPlayer.put(player, newPlayerGameScore);
-    player.getOpponentStream().forEach(
-        opponent -> newGameScoreByPlayer.put(opponent, oldScore.getPlayerGameScore(opponent)));
+    newGameScoreByPlayer.put(player, playerGameScore);
+    newGameScoreByPlayer.put(player.getOpponent(), opponentGameScore);
     return new GameScore(newGameScoreByPlayer);
   }
 }

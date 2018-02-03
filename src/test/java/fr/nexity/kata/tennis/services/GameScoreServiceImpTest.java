@@ -61,7 +61,7 @@ public class GameScoreServiceImpTest {
     newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_1);
     // THEN
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
-        .isEqualTo(new PlayerGameScore(40));
+        .isEqualTo(PlayerGameScore.SCORE_40);
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_2))
         .isEqualTo(new PlayerGameScore(0));
   }
@@ -113,7 +113,76 @@ public class GameScoreServiceImpTest {
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
         .isEqualTo(new PlayerGameScore(30));
     Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_2))
-        .isEqualTo(new PlayerGameScore(40));
+        .isEqualTo(PlayerGameScore.SCORE_40);
+  }
+
+  @Test
+  public void shouldBeDeuceIfPlayer1wins3PointsAndPlayer2Wins3Points() {
+    // GIVEN
+    GameScore gameScore = GameScore.INITIAL;
+    // WHEN
+    GameScore newGameScore = gameScoreService.incrementPoint(gameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_2);
+    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_1);
+    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_2);
+    newGameScore = gameScoreService.incrementPoint(newGameScore, Player.PLAYER_2);
+    // THEN
+    Assertions.assertThat(newGameScore.isDeuce()).isTrue();
+    Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
+        .isEqualTo(PlayerGameScore.SCORE_40);
+    Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_2))
+        .isEqualTo(PlayerGameScore.SCORE_40);
+  }
+
+  @Test
+  public void shouldBeAdvantageIfPlayer1wins1PointFromDeuceSituation() {
+    // GIVEN
+    GameScore deuceScore = new GameScore(
+        ImmutableMap.of(
+            Player.PLAYER_1, PlayerGameScore.SCORE_40,
+            Player.PLAYER_2, PlayerGameScore.SCORE_40));
+    // WHEN
+    GameScore newGameScore = gameScoreService.incrementPoint(deuceScore, Player.PLAYER_1);
+    // THEN
+    Assertions.assertThat(newGameScore.isDeuce()).isFalse();
+    Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
+        .isEqualTo(new PlayerGameScore(PlayerGameSituation.ADVANTAGE));
+    Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_2))
+        .isEqualTo(PlayerGameScore.SCORE_40);
+  }
+
+  @Test
+  public void shouldBeDeuceIfPlayer1loses1PointFromAdvantageSituation() {
+    // GIVEN
+    GameScore gameScore = new GameScore(
+        ImmutableMap.of(
+            Player.PLAYER_1, new PlayerGameScore(PlayerGameSituation.ADVANTAGE),
+            Player.PLAYER_2, PlayerGameScore.SCORE_40));
+    // WHEN
+    GameScore newGameScore = gameScoreService.incrementPoint(gameScore, Player.PLAYER_2);
+    // THEN
+    Assertions.assertThat(newGameScore.isDeuce()).isTrue();
+    Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
+        .isEqualTo(PlayerGameScore.SCORE_40);
+    Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_2))
+        .isEqualTo(PlayerGameScore.SCORE_40);
+  }
+
+  @Test
+  public void shouldBeWinIfPlayer1wins1PointFromAdvantageSituation() {
+    // GIVEN
+    GameScore gameScore = new GameScore(
+        ImmutableMap.of(
+            Player.PLAYER_1, new PlayerGameScore(PlayerGameSituation.ADVANTAGE),
+            Player.PLAYER_2, PlayerGameScore.SCORE_40));
+    // WHEN
+    GameScore newGameScore = gameScoreService.incrementPoint(gameScore, Player.PLAYER_1);
+    // THEN
+    Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_1))
+        .isEqualTo(new PlayerGameScore(PlayerGameSituation.WIN));
+    Assertions.assertThat(newGameScore.getPlayerGameScore(Player.PLAYER_2))
+        .isEqualTo(PlayerGameScore.SCORE_40);
   }
 
 }

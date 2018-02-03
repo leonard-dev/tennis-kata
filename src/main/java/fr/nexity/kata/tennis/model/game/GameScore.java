@@ -11,6 +11,7 @@ import java.util.Objects;
 public class GameScore implements HasWinner {
 
   public final static GameScore INITIAL = createInitialScore();
+  public final static GameScore DEUCE = createDeuceScore();
 
   private final Map<Player, PlayerGameScore> gameScoreByPlayer;
 
@@ -21,7 +22,14 @@ public class GameScore implements HasWinner {
   private static GameScore createInitialScore() {
     final Map<Player, PlayerGameScore> gameScoreByPlayer = new EnumMap<>(Player.class);
     Arrays.stream(Player.values())
-        .forEach(player -> gameScoreByPlayer.put(player, PlayerGameScore.INITIAL));
+        .forEach(player -> gameScoreByPlayer.put(player, PlayerGameScore.SCORE_0));
+    return new GameScore(gameScoreByPlayer);
+  }
+
+  private static GameScore createDeuceScore() {
+    final Map<Player, PlayerGameScore> gameScoreByPlayer = new EnumMap<>(Player.class);
+    Arrays.stream(Player.values())
+        .forEach(player -> gameScoreByPlayer.put(player, PlayerGameScore.SCORE_40));
     return new GameScore(gameScoreByPlayer);
   }
 
@@ -35,6 +43,10 @@ public class GameScore implements HasWinner {
         .filter(entry -> entry.getValue().getSituation() == PlayerGameSituation.WIN)
         .map(Entry::getKey)
         .findAny().orElse(null);
+  }
+
+  public boolean isDeuce() {
+    return this.equals(DEUCE);
   }
 
   @Override
