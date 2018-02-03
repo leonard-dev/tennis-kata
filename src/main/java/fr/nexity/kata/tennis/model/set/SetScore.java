@@ -11,6 +11,7 @@ import java.util.Objects;
 public class SetScore implements HasWinner {
 
   public final static SetScore INITIAL = createInitialScore();
+  public final static SetScore TIEBREAK = createTiebreakScore();
 
   private final Map<Player, PlayerSetScore> setScoreByPlayer;
 
@@ -25,6 +26,13 @@ public class SetScore implements HasWinner {
     return new SetScore(setScoreByPlayer);
   }
 
+  private static SetScore createTiebreakScore() {
+    final Map<Player, PlayerSetScore> setScoreByPlayer = new EnumMap<>(Player.class);
+    Arrays.stream(Player.values())
+        .forEach(player -> setScoreByPlayer.put(player, new PlayerSetScore(6, false)));
+    return new SetScore(setScoreByPlayer);
+  }
+
   public PlayerSetScore getPlayerSetScore(Player player) {
     return setScoreByPlayer.get(player);
   }
@@ -36,6 +44,11 @@ public class SetScore implements HasWinner {
         .map(Entry::getKey)
         .findAny().orElse(null);
   }
+
+  public boolean isTiebreak() {
+    return this.equals(TIEBREAK);
+  }
+
 
   @Override
   public boolean equals(final Object o) {

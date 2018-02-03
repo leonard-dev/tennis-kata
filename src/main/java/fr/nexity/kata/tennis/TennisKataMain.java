@@ -6,6 +6,7 @@ import fr.nexity.kata.tennis.model.GlobalScore;
 import fr.nexity.kata.tennis.model.Player;
 import fr.nexity.kata.tennis.model.game.PlayerGameScore;
 import fr.nexity.kata.tennis.model.set.PlayerSetScore;
+import fr.nexity.kata.tennis.model.tiebreak.PlayerTiebreakScore;
 import fr.nexity.kata.tennis.services.GlobalScoreService;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -46,9 +47,17 @@ public class TennisKataMain {
         System.out.println(
             String.format(SCORE_FORMAT,
                 player.name(),
-                formatGameScore(score.getGameScore().getPlayerGameScore(player)),
+                formatGameOrTiebreak(score, player),
                 formatSetScore(score.getSetScore().getPlayerSetScore(player)))));
 
+  }
+
+  private final static String formatGameOrTiebreak(GlobalScore score, Player player) {
+    if (score.hasTiebreakScore()) {
+      return formatGameTiebreak(score.getTiebreakScore().getPlayerTiebreakScore(player));
+    } else {
+      return formatGameScore(score.getGameScore().getPlayerGameScore(player));
+    }
   }
 
   private final static String formatGameScore(PlayerGameScore playerGameScore) {
@@ -56,8 +65,12 @@ public class TennisKataMain {
         : "" + playerGameScore.getPoints();
   }
 
+  private final static String formatGameTiebreak(PlayerTiebreakScore playerTiebreakScore) {
+    return "" + playerTiebreakScore.getPoints();
+  }
+
   private final static String formatSetScore(PlayerSetScore playerSetScore) {
-    return playerSetScore.isWin() ? "WIN" : "" + playerSetScore.getGames();
+    return "" + playerSetScore.getGames();
   }
 
   private final static void printPrompt() {

@@ -17,7 +17,7 @@ public class SetScoreServiceImpl implements SetScoreService {
   public SetScore increment(final SetScore score, final Player player) {
     if (score.hasWinner()) {
       throw new IllegalStateException(
-          "Cannot increment a set with already a winner, please reset the set before!");
+          "Cannot increment a set with already a winner !");
     }
     final PlayerSetScore playerSetScore = score.getPlayerSetScore(player);
     final PlayerSetScore opponentSetScore = score.getPlayerSetScore(player.getOpponent());
