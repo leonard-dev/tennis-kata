@@ -22,10 +22,6 @@ public class GlobalScoreServiceImpl implements GlobalScoreService {
   }
 
   @Override
-  public GlobalScore createInitialScore() {
-    return GlobalScore.INITIAL;
-  }
-
   public GlobalScore increment(final GlobalScore score, final Player player) {
     final SetScore setScore = score.getSetScore();
     if (setScore.isTiebreak()) {

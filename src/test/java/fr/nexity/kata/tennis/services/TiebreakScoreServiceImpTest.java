@@ -12,9 +12,9 @@ public class TiebreakScoreServiceImpTest {
   private final TiebreakScoreService tiebreakScoreService = new TiebreakScoreServiceImpl();
 
   @Test
-  public void shouldBeOtoOWhenAskingInitialScore() {
-    // WHEN
-    TiebreakScore initialTiebreakScore = tiebreakScoreService.createInitialScore();
+  public void shouldBeOtoOGivenInitialScore() {
+    // GIVEN
+    TiebreakScore initialTiebreakScore = TiebreakScore.INITIAL;
     // THEN
     Assertions.assertThat(initialTiebreakScore).isSameAs(TiebreakScore.INITIAL);
     Assertions.assertThat(initialTiebreakScore.getPlayerTiebreakScore(Player.PLAYER_1))

@@ -8,12 +8,7 @@ import java.util.Map;
 
 public class TiebreakScoreServiceImpl implements TiebreakScoreService {
 
-
   @Override
-  public TiebreakScore createInitialScore() {
-    return TiebreakScore.INITIAL;
-  }
-
   public TiebreakScore increment(final TiebreakScore score, final Player player) {
     if (score.hasWinner()) {
       throw new IllegalStateException(

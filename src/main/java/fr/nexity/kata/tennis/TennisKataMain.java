@@ -22,7 +22,7 @@ public class TennisKataMain {
     final Injector injector = Guice.createInjector(new TennisKataModule());
     final GlobalScoreService globalScoreService = injector.getInstance(GlobalScoreService.class);
     final Scanner console = new Scanner(System.in);
-    GlobalScore score = globalScoreService.createInitialScore();
+    GlobalScore score = GlobalScore.INITIAL;
     printScore(score);
     while (!score.hasWinner()) {
       Player player = null;

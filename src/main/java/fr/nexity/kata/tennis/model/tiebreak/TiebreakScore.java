@@ -1,6 +1,6 @@
 package fr.nexity.kata.tennis.model.tiebreak;
 
-import fr.nexity.kata.tennis.model.HasWinner;
+import fr.nexity.kata.tennis.model.Score;
 import fr.nexity.kata.tennis.model.Player;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-public class TiebreakScore implements HasWinner {
+public class TiebreakScore implements Score {
 
   public final static TiebreakScore INITIAL = createInitialScore();
 

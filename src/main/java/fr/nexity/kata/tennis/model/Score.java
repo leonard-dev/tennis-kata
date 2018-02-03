@@ -1,6 +1,6 @@
 package fr.nexity.kata.tennis.model;
 
-public interface HasWinner {
+public interface Score {
 
   Player getWinner();
 

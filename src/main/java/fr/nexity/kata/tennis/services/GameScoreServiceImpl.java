@@ -19,10 +19,6 @@ public class GameScoreServiceImpl implements GameScoreService {
       new PlayerGameScore(PlayerGameSituation.WIN));
 
   @Override
-  public GameScore createInitialScore() {
-    return GameScore.INITIAL;
-  }
-
   public GameScore increment(final GameScore score, final Player player) {
     if (score.hasWinner()) {
       throw new IllegalStateException(

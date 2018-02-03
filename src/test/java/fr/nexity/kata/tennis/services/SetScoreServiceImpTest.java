@@ -12,9 +12,9 @@ public class SetScoreServiceImpTest {
   private final SetScoreService setScoreService = new SetScoreServiceImpl();
 
   @Test
-  public void shouldBeOtoOWhenAskingInitialScore() {
+  public void shouldBeOtoOGivenInitialScore() {
     // WHEN
-    SetScore initialSetScore = setScoreService.createInitialScore();
+    SetScore initialSetScore = SetScore.INITIAL;
     // THEN
     Assertions.assertThat(initialSetScore).isSameAs(SetScore.INITIAL);
     Assertions.assertThat(initialSetScore.getPlayerSetScore(Player.PLAYER_1))

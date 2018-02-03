@@ -5,7 +5,7 @@ import fr.nexity.kata.tennis.model.set.SetScore;
 import fr.nexity.kata.tennis.model.tiebreak.TiebreakScore;
 import java.util.Objects;
 
-public class GlobalScore implements HasWinner {
+public class GlobalScore implements Score {
 
   public final static GlobalScore INITIAL = new GlobalScore(SetScore.INITIAL, GameScore.INITIAL);
 

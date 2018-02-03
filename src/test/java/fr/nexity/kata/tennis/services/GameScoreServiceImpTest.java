@@ -13,11 +13,10 @@ public class GameScoreServiceImpTest {
   private final GameScoreService gameScoreService = new GameScoreServiceImpl();
 
   @Test
-  public void shouldBeOtoOWhenAskingInitialScore() {
-    // WHEN
-    GameScore initialGameScore = gameScoreService.createInitialScore();
+  public void shouldBeOtoOGivenInitialScore() {
+    // GIVEN
+    GameScore initialGameScore = GameScore.INITIAL;
     // THEN
-    Assertions.assertThat(initialGameScore).isSameAs(GameScore.INITIAL);
     Assertions.assertThat(initialGameScore.getPlayerGameScore(Player.PLAYER_1))
         .isEqualTo(new PlayerGameScore(0));
     Assertions.assertThat(initialGameScore.getPlayerGameScore(Player.PLAYER_2))

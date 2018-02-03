@@ -8,12 +8,7 @@ import java.util.Map;
 
 public class SetScoreServiceImpl implements SetScoreService {
 
-
   @Override
-  public SetScore createInitialScore() {
-    return SetScore.INITIAL;
-  }
-
   public SetScore increment(final SetScore score, final Player player) {
     if (score.hasWinner()) {
       throw new IllegalStateException(

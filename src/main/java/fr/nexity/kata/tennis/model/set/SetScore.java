@@ -1,6 +1,6 @@
 package fr.nexity.kata.tennis.model.set;
 
-import fr.nexity.kata.tennis.model.HasWinner;
+import fr.nexity.kata.tennis.model.Score;
 import fr.nexity.kata.tennis.model.Player;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-public class SetScore implements HasWinner {
+public class SetScore implements Score {
 
   public final static SetScore INITIAL = createInitialScore();
   public final static SetScore TIEBREAK = createTiebreakScore();

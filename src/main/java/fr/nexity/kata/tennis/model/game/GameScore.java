@@ -1,6 +1,6 @@
 package fr.nexity.kata.tennis.model.game;
 
-import fr.nexity.kata.tennis.model.HasWinner;
+import fr.nexity.kata.tennis.model.Score;
 import fr.nexity.kata.tennis.model.Player;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-public class GameScore implements HasWinner {
+public class GameScore implements Score {
 
   public final static GameScore INITIAL = createInitialScore();
   public final static GameScore DEUCE = createDeuceScore();
