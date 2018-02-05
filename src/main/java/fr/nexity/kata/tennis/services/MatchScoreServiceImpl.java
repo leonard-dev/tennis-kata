@@ -2,6 +2,7 @@ package fr.nexity.kata.tennis.services;
 
 import fr.nexity.kata.tennis.model.MatchScore;
 import fr.nexity.kata.tennis.model.Player;
+import fr.nexity.kata.tennis.model.TypedGameScore;
 import fr.nexity.kata.tennis.model.game.GameScore;
 import fr.nexity.kata.tennis.model.set.SetScore;
 import fr.nexity.kata.tennis.model.tiebreak.TiebreakScore;
@@ -9,43 +10,47 @@ import javax.inject.Inject;
 
 public class MatchScoreServiceImpl implements MatchScoreService {
 
-  private final GameScoreService gameScoreService;
-  private final TiebreakScoreService tiebreakScoreService;
+  private final TypedGameScoreService typedGameScoreService;
   private final SetScoreService setScoreService;
 
   @Inject
-  public MatchScoreServiceImpl(GameScoreService gameScoreService,
-      TiebreakScoreService tiebreakScoreService, SetScoreService setScoreService) {
-    this.gameScoreService = gameScoreService;
-    this.tiebreakScoreService = tiebreakScoreService;
+  public MatchScoreServiceImpl(TypedGameScoreService typedGameScoreService,
+      SetScoreService setScoreService) {
+    this.typedGameScoreService = typedGameScoreService;
     this.setScoreService = setScoreService;
   }
 
   @Override
   public MatchScore increment(final MatchScore score, final Player player) {
-    final SetScore setScore = score.getSetScore();
-    if (setScore.isTiebreak()) {
-      final TiebreakScore tiebreakScore = score.getTiebreakScore();
-      final TiebreakScore newTiebreakScore = tiebreakScoreService.increment(tiebreakScore, player);
-      if (newTiebreakScore.hasWinner()) {
-        final SetScore newSetScore = setScoreService.increment(setScore, player);
-        return new MatchScore(newSetScore, newTiebreakScore); // keep the tiebreak score
-      } else {
-        return new MatchScore(setScore, newTiebreakScore);
+    final TypedGameScore newGameScore = incrementGameScore(score, player);
+    final SetScore newSetScore = incrementSetScoreIfNeeded(score, player, newGameScore);
+    final TypedGameScore finalGameScore = resetGameScoreIfNeeded(score, newGameScore, newSetScore);
+    return new MatchScore(newSetScore, finalGameScore);
+  }
+
+  private TypedGameScore incrementGameScore(final MatchScore score, Player player) {
+    return typedGameScoreService.increment(score.getTypedGameScore(), player);
+  }
+
+  private SetScore incrementSetScoreIfNeeded(final MatchScore score, final Player player,
+      final TypedGameScore newGameScore) {
+    if (newGameScore.hasWinner()) {
+      return setScoreService.increment(score.getSetScore(), player);
+    }
+    return score.getSetScore();
+  }
+
+  private TypedGameScore resetGameScoreIfNeeded(final MatchScore score,
+      final TypedGameScore newGameScore, final SetScore newSetScore) {
+    if (newGameScore.hasWinner()) {
+      if (newSetScore.isTiebreak()) {
+        return TiebreakScore.INITIAL; // prepare the new tiebreak
       }
-    } else {
-      final GameScore gameScore = score.getGameScore();
-      final GameScore newGameScore = gameScoreService.increment(gameScore, player);
-      if (newGameScore.hasWinner()) {
-        final SetScore newSetScore = setScoreService.increment(setScore, player);
-        if (newSetScore.isTiebreak()) {
-          return new MatchScore(newSetScore, TiebreakScore.INITIAL); // prepare the new tiebreak
-        } else {
-          return new MatchScore(newSetScore, GameScore.INITIAL); // prepare the new game
-        }
-      } else {
-        return new MatchScore(setScore, newGameScore);
+      if (!score.getSetScore().isTiebreak()) {
+        return GameScore.INITIAL; // prepare the new game
       }
     }
+    return newGameScore;
   }
+
 }

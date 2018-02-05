@@ -1,14 +1,15 @@
 package fr.nexity.kata.tennis.model.game;
 
-import fr.nexity.kata.tennis.model.Score;
+import fr.nexity.kata.tennis.model.GameType;
 import fr.nexity.kata.tennis.model.Player;
+import fr.nexity.kata.tennis.model.TypedGameScore;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-public class GameScore implements Score {
+public class GameScore implements TypedGameScore {
 
   public final static GameScore INITIAL = createInitialScore();
   public final static GameScore DEUCE = createDeuceScore();
@@ -33,8 +34,14 @@ public class GameScore implements Score {
     return new GameScore(gameScoreByPlayer);
   }
 
-  public PlayerGameScore getPlayerGameScore(Player player) {
+  @Override
+  public PlayerGameScore getPlayerScore(Player player) {
     return gameScoreByPlayer.get(player);
+  }
+
+  @Override
+  public GameType getGameType() {
+    return GameType.GAME;
   }
 
   @Override

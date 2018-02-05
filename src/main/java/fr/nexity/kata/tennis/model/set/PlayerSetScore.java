@@ -1,8 +1,9 @@
 package fr.nexity.kata.tennis.model.set;
 
+import fr.nexity.kata.tennis.model.PlayerScore;
 import java.util.Objects;
 
-public class PlayerSetScore {
+public class PlayerSetScore implements PlayerScore {
 
   public final static PlayerSetScore INITIAL = new PlayerSetScore(0, false);
 
@@ -20,6 +21,11 @@ public class PlayerSetScore {
 
   public boolean isWin() {
     return isWin;
+  }
+
+  @Override
+  public String getFormattedScore() {
+    return "" + getGames();
   }
 
   @Override

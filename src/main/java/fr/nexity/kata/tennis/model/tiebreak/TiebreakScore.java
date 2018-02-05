@@ -1,14 +1,15 @@
 package fr.nexity.kata.tennis.model.tiebreak;
 
-import fr.nexity.kata.tennis.model.Score;
+import fr.nexity.kata.tennis.model.GameType;
 import fr.nexity.kata.tennis.model.Player;
+import fr.nexity.kata.tennis.model.TypedGameScore;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-public class TiebreakScore implements Score {
+public class TiebreakScore implements TypedGameScore {
 
   public final static TiebreakScore INITIAL = createInitialScore();
 
@@ -25,8 +26,14 @@ public class TiebreakScore implements Score {
     return new TiebreakScore(tiebreakScoreByPlayer);
   }
 
-  public PlayerTiebreakScore getPlayerTiebreakScore(Player player) {
+  @Override
+  public PlayerTiebreakScore getPlayerScore(Player player) {
     return tiebreakScoreByPlayer.get(player);
+  }
+
+  @Override
+  public GameType getGameType() {
+    return GameType.TIEBREAK;
   }
 
   @Override

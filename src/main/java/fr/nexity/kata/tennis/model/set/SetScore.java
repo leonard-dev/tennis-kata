@@ -33,7 +33,7 @@ public class SetScore implements Score {
     return new SetScore(setScoreByPlayer);
   }
 
-  public PlayerSetScore getPlayerSetScore(Player player) {
+  public PlayerSetScore getPlayerScore(Player player) {
     return setScoreByPlayer.get(player);
   }
 

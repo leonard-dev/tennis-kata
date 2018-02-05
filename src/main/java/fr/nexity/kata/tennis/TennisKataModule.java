@@ -9,6 +9,8 @@ import fr.nexity.kata.tennis.services.SetScoreService;
 import fr.nexity.kata.tennis.services.SetScoreServiceImpl;
 import fr.nexity.kata.tennis.services.TiebreakScoreService;
 import fr.nexity.kata.tennis.services.TiebreakScoreServiceImpl;
+import fr.nexity.kata.tennis.services.TypedGameScoreService;
+import fr.nexity.kata.tennis.services.TypedGameScoreServiceImpl;
 
 public class TennisKataModule extends AbstractModule {
 
@@ -16,6 +18,7 @@ public class TennisKataModule extends AbstractModule {
   protected void configure() {
     bind(GameScoreService.class).to(GameScoreServiceImpl.class);
     bind(TiebreakScoreService.class).to(TiebreakScoreServiceImpl.class);
+    bind(TypedGameScoreService.class).to(TypedGameScoreServiceImpl.class);
     bind(SetScoreService.class).to(SetScoreServiceImpl.class);
     bind(MatchScoreService.class).to(MatchScoreServiceImpl.class);
   }

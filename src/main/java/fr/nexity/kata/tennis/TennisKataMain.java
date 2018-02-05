@@ -4,9 +4,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import fr.nexity.kata.tennis.model.MatchScore;
 import fr.nexity.kata.tennis.model.Player;
-import fr.nexity.kata.tennis.model.game.PlayerGameScore;
-import fr.nexity.kata.tennis.model.set.PlayerSetScore;
-import fr.nexity.kata.tennis.model.tiebreak.PlayerTiebreakScore;
 import fr.nexity.kata.tennis.services.MatchScoreService;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -41,43 +38,22 @@ public class TennisKataMain {
     printWinner(score.getWinner());
   }
 
-  private final static void printScore(MatchScore score) {
+  private static void printScore(MatchScore score) {
     System.out.println(String.format(SCORE_FORMAT, "", "Points", "Games"));
     Arrays.stream(Player.values()).forEach(player ->
         System.out.println(
             String.format(SCORE_FORMAT,
                 player.name(),
-                formatGameOrTiebreak(score, player),
-                formatSetScore(score.getSetScore().getPlayerSetScore(player)))));
+                score.getTypedGameScore().getPlayerScore(player).getFormattedScore(),
+                score.getSetScore().getPlayerScore(player).getFormattedScore())));
 
   }
 
-  private final static String formatGameOrTiebreak(MatchScore score, Player player) {
-    if (score.hasTiebreakScore()) {
-      return formatGameTiebreak(score.getTiebreakScore().getPlayerTiebreakScore(player));
-    } else {
-      return formatGameScore(score.getGameScore().getPlayerGameScore(player));
-    }
-  }
-
-  private final static String formatGameScore(PlayerGameScore playerGameScore) {
-    return playerGameScore.hasSituation() ? playerGameScore.getSituation().name()
-        : "" + playerGameScore.getPoints();
-  }
-
-  private final static String formatGameTiebreak(PlayerTiebreakScore playerTiebreakScore) {
-    return "" + playerTiebreakScore.getPoints();
-  }
-
-  private final static String formatSetScore(PlayerSetScore playerSetScore) {
-    return "" + playerSetScore.getGames();
-  }
-
-  private final static void printPrompt() {
+  private static void printPrompt() {
     System.out.print("Which player has won the point (1 or 2) ? ");
   }
 
-  private final static void printWinner(Player player) {
+  private static void printWinner(Player player) {
     System.out.println(String.format("The winner is %s !", player.name()));
   }
 

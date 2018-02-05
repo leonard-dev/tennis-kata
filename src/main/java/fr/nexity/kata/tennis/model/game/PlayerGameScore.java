@@ -1,9 +1,10 @@
 package fr.nexity.kata.tennis.model.game;
 
 import com.google.common.base.Preconditions;
+import fr.nexity.kata.tennis.model.PlayerScore;
 import java.util.Objects;
 
-public class PlayerGameScore {
+public class PlayerGameScore implements PlayerScore {
 
   public final static PlayerGameScore SCORE_0 = new PlayerGameScore(0);
   public final static PlayerGameScore SCORE_15 = new PlayerGameScore(15);
@@ -25,7 +26,11 @@ public class PlayerGameScore {
     this.situation = situation;
   }
 
-  public Integer getPoints() {
+  public boolean hasPoints() {
+    return points != null;
+  }
+
+  public int getPoints() {
     return points;
   }
 
@@ -37,6 +42,10 @@ public class PlayerGameScore {
     return situation;
   }
 
+  @Override
+  public String getFormattedScore() {
+    return hasSituation() ? getSituation().name() : "" + getPoints();
+  }
 
   @Override
   public boolean equals(final Object o) {

@@ -2,7 +2,6 @@ package fr.nexity.kata.tennis.model;
 
 import fr.nexity.kata.tennis.model.game.GameScore;
 import fr.nexity.kata.tennis.model.set.SetScore;
-import fr.nexity.kata.tennis.model.tiebreak.TiebreakScore;
 import java.util.Objects;
 
 public class MatchScore implements Score {
@@ -11,36 +10,19 @@ public class MatchScore implements Score {
 
   private final SetScore setScore;
 
-  // either game or tiebreak
-  private final TiebreakScore tiebreakScore;
-  private final GameScore gameScore;
+  private final TypedGameScore typedGameScore;
 
-  public MatchScore(final SetScore setScore, final GameScore gameScore) {
+  public MatchScore(final SetScore setScore, final TypedGameScore typedGameScore) {
     this.setScore = setScore;
-    this.tiebreakScore = null;
-    this.gameScore = gameScore;
-  }
-
-  public MatchScore(final SetScore setScore, final TiebreakScore tiebreakScore) {
-    this.setScore = setScore;
-    this.tiebreakScore = tiebreakScore;
-    this.gameScore = null;
-  }
-
-  public boolean hasTiebreakScore() {
-    return tiebreakScore != null;
+    this.typedGameScore = typedGameScore;
   }
 
   public SetScore getSetScore() {
     return setScore;
   }
 
-  public TiebreakScore getTiebreakScore() {
-    return tiebreakScore;
-  }
-
-  public GameScore getGameScore() {
-    return gameScore;
+  public TypedGameScore getTypedGameScore() {
+    return typedGameScore;
   }
 
   @Override
@@ -59,22 +41,20 @@ public class MatchScore implements Score {
     }
     MatchScore that = (MatchScore) o;
     return Objects.equals(setScore, that.setScore) &&
-        Objects.equals(tiebreakScore, that.tiebreakScore) &&
-        Objects.equals(gameScore, that.gameScore);
+        Objects.equals(typedGameScore, that.typedGameScore);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(setScore, tiebreakScore, gameScore);
+    return Objects.hash(setScore, typedGameScore);
   }
 
   @Override
   public String toString() {
     return "MatchScore{" +
         "setScore=" + setScore +
-        ", tiebreakScore=" + tiebreakScore +
-        ", gameScore=" + gameScore +
+        ", typedGameScore=" + typedGameScore +
         '}';
   }
 }

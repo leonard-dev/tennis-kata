@@ -1,33 +1,28 @@
 package fr.nexity.kata.tennis.services;
 
+import com.google.common.base.Preconditions;
 import fr.nexity.kata.tennis.model.Player;
-import fr.nexity.kata.tennis.model.set.PlayerSetScore;
 import fr.nexity.kata.tennis.model.set.SetScore;
-import java.util.EnumMap;
-import java.util.Map;
+import fr.nexity.kata.tennis.rules.ScoreResolver;
+import fr.nexity.kata.tennis.rules.set.DefaultSetScoreRule;
+import fr.nexity.kata.tennis.rules.set.WinSetScoreRule;
+import javax.inject.Inject;
 
 public class SetScoreServiceImpl implements SetScoreService {
 
-  @Override
-  public SetScore increment(final SetScore score, final Player player) {
-    if (score.hasWinner()) {
-      throw new IllegalStateException(
-          "Cannot increment a set with already a winner !");
-    }
-    final PlayerSetScore playerSetScore = score.getPlayerSetScore(player);
-    final PlayerSetScore opponentSetScore = score.getPlayerSetScore(player.getOpponent());
-    final int newPlayerSetGames = playerSetScore.getGames() + 1;
-    final boolean isWin =
-        newPlayerSetGames == 7 || (newPlayerSetGames == 6 && opponentSetScore.getGames() <= 4);
-    return createNewScore(player, new PlayerSetScore(newPlayerSetGames, isWin),
-        opponentSetScore);
+  private final ScoreResolver<SetScore> scoreResolver;
+
+  @Inject
+  public SetScoreServiceImpl(DefaultSetScoreRule defaultSetScoreRule,
+      WinSetScoreRule winSetScoreRule) {
+    this.scoreResolver = new ScoreResolver<>(winSetScoreRule, defaultSetScoreRule);
   }
 
-  private SetScore createNewScore(Player player, PlayerSetScore playerSetScore,
-      PlayerSetScore opponentSetScore) {
-    final Map<Player, PlayerSetScore> newSetScoreByPlayer = new EnumMap<>(Player.class);
-    newSetScoreByPlayer.put(player, playerSetScore);
-    newSetScoreByPlayer.put(player.getOpponent(), opponentSetScore);
-    return new SetScore(newSetScoreByPlayer);
+  @Override
+  public SetScore increment(final SetScore score, final Player pointWinner) {
+    Preconditions
+        .checkState(!score.hasWinner(), "Cannot increment a game with already a winner of set !");
+    return scoreResolver.increment(score, pointWinner);
   }
+
 }

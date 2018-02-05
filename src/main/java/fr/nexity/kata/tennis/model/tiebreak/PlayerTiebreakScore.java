@@ -1,8 +1,9 @@
 package fr.nexity.kata.tennis.model.tiebreak;
 
+import fr.nexity.kata.tennis.model.PlayerScore;
 import java.util.Objects;
 
-public class PlayerTiebreakScore {
+public class PlayerTiebreakScore implements PlayerScore {
 
   public final static PlayerTiebreakScore INITIAL = new PlayerTiebreakScore(0, false);
 
@@ -20,6 +21,11 @@ public class PlayerTiebreakScore {
 
   public boolean isWin() {
     return isWin;
+  }
+
+  @Override
+  public String getFormattedScore() {
+    return "" + getPoints();
   }
 
   @Override

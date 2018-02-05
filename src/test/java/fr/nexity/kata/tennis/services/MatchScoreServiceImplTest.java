@@ -37,8 +37,7 @@ public class MatchScoreServiceImplTest {
     // WHEN
     MatchScore newMatchScore = matchScoreService.increment(matchScore, Player.PLAYER_1);
     // THEN
-    Assertions.assertThat(newMatchScore.getTiebreakScore()).isNull();
-    Assertions.assertThat(newMatchScore.getGameScore()).isEqualTo(newExpectedGameScore);
+    Assertions.assertThat(newMatchScore.getTypedGameScore()).isEqualTo(newExpectedGameScore);
     Assertions.assertThat(newMatchScore.getSetScore()).isEqualTo(SetScore.INITIAL);
   }
 
@@ -68,8 +67,7 @@ public class MatchScoreServiceImplTest {
     // WHEN
     MatchScore newMatchScore = matchScoreService.increment(matchScore, Player.PLAYER_1);
     // THEN
-    Assertions.assertThat(newMatchScore.getTiebreakScore()).isNull();
-    Assertions.assertThat(newMatchScore.getGameScore()).isEqualTo(GameScore.INITIAL);
+    Assertions.assertThat(newMatchScore.getTypedGameScore()).isEqualTo(GameScore.INITIAL);
     Assertions.assertThat(newMatchScore.getSetScore()).isEqualTo(newExpectedSetScore);
   }
 
@@ -104,8 +102,7 @@ public class MatchScoreServiceImplTest {
     // WHEN
     MatchScore newMatchScore = matchScoreService.increment(matchScore, Player.PLAYER_1);
     // THEN
-    Assertions.assertThat(newMatchScore.getTiebreakScore()).isEqualTo(newExpectedTiebreakScore);
-    Assertions.assertThat(newMatchScore.getGameScore()).isNull();
+    Assertions.assertThat(newMatchScore.getTypedGameScore()).isEqualTo(newExpectedTiebreakScore);
     Assertions.assertThat(newMatchScore.getSetScore()).isEqualTo(newExpectedSetScore);
   }
 
@@ -117,6 +114,7 @@ public class MatchScoreServiceImplTest {
       bind(GameScoreService.class).toInstance(Mockito.mock(GameScoreService.class));
       bind(TiebreakScoreService.class).toInstance(Mockito.mock(TiebreakScoreService.class));
       bind(SetScoreService.class).toInstance(Mockito.mock(SetScoreService.class));
+      bind(TypedGameScoreService.class).to(TypedGameScoreServiceImpl.class);
       bind(MatchScoreService.class).to(MatchScoreServiceImpl.class);
     }
   }
