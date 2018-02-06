@@ -8,9 +8,6 @@ import fr.nexity.kata.tennis.services.MatchScoreService;
 import java.util.Arrays;
 import java.util.Scanner;
 
-/**
- * Hello world!
- */
 public class TennisKataMain {
 
   private final static String SCORE_FORMAT = "| %1$10s | %2$10s | %3$10s |";

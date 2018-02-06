@@ -26,10 +26,6 @@ public class PlayerGameScore implements PlayerScore {
     this.situation = situation;
   }
 
-  public boolean hasPoints() {
-    return points != null;
-  }
-
   public int getPoints() {
     return points;
   }
